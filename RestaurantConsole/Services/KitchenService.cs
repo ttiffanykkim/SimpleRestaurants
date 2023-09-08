@@ -9,6 +9,20 @@ public class KitchenService : IKitchenService
     {
         _repository = repository;
     }
+    private int totalCalories = 0;
+    private int totalCookTime = 0;
+
+    // Add a method to calculate total calories for a given order
+    private int CalculateOrderCalories(IFood food, int quantity)
+    {
+        return food.Calories * quantity;
+    }
+
+    // Add a method to calculate total cook time for a given order
+    private int CalculateOrderCookTime(IFood food, int quantity)
+    {
+        return food.CookTime * quantity;
+    }
     public string AddIngredients(IList<Ingredient> ingredients)
     {
         _repository.AddIngredients(ingredients);
@@ -44,15 +58,17 @@ public class KitchenService : IKitchenService
             {
                 var lacking = _repository.GetLackingIngredients(totalIngredientsNeeded);
                 var lackingMessages = lacking.Select(ingredient => $"\r\n - {ingredient.Quantity} more units of {ingredient.Name} are needed for {quantity}x {food.Name}");
-                message.AppendLine($"Cannot process order. {string.Join(". ", lackingMessages)}.");
+                message.AppendLine($"Cannot process order for {quantity}x {food.Name}.");
+                message.Append(string.Join(". ", lackingMessages));
             }
             else
             {
                 message.AppendLine($"Order successful for {quantity}x {food.Name}");
+                totalCalories += CalculateOrderCalories(food, quantity);
+                totalCookTime += CalculateOrderCookTime(food, quantity);
                 // If the required ingredients are available, remove them from the inventory
                 _repository.RemoveIngredients(totalIngredientsNeeded);
             }
-
 
         }
 
@@ -78,6 +94,18 @@ public class KitchenService : IKitchenService
         // Lambda expression to select details of available ingredients
         var ingredientDetails = inventory.Select(kvp => $"{kvp.Key}: {kvp.Value} units");
         return string.Join("\r\n", ingredientDetails);
+    }
+
+    // Add a method to get the total calories
+    public int GetTotalCalories()
+    {
+        return totalCalories;
+    }
+
+    // Add a method to get the total cook time
+    public int GetTotalCookTime()
+    {
+        return totalCookTime;
     }
 
 }

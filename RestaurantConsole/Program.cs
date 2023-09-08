@@ -19,6 +19,8 @@ var order = new OrderRequest
 var result = kitchen.GetOrder(order);
 Console.WriteLine("Order 2 Pizzas, and 3 Burgers...");
 Console.WriteLine(result.Message);
+Console.WriteLine($"Total Calories: {kitchen.GetTotalCalories()}");
+Console.WriteLine($"Total Cook Time: {kitchen.GetTotalCookTime()}");
 Console.WriteLine();
 
 // Adding ingredients
@@ -44,6 +46,8 @@ Console.WriteLine();
 Console.WriteLine("Order 2 Pizzas, and 3 Burgers...");
 result = kitchen.GetOrder(order);
 Console.WriteLine(result.Message);
+Console.WriteLine($"Total Calories: {kitchen.GetTotalCalories()}");
+Console.WriteLine($"Total Cook Time: {kitchen.GetTotalCookTime()}");
 Console.WriteLine();
 
 // Display the changed inventory
